@@ -65,4 +65,8 @@ class UserController extends Controller
         $model = User::create($data);
         return response()->json($model, 201);
     }
+
+    public function clients(Request $request){
+        return response()->json(['ok' => true]);
+    }
 }
