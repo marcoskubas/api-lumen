@@ -19,6 +19,10 @@ class UserController extends Controller
         //
     }
 
+    public function userAuth(Request $request){
+        return $request->user();
+    }
+
     /*
      * Login Stateless
      * */
