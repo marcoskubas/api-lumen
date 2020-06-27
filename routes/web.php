@@ -21,6 +21,12 @@ $router->group(['prefix' => 'api'], function() use($router){
 
     $router->post('/login', 'UserController@login');
 
+    $router->group(['middleware' => ['auth']], function() use($router){
+
+        $router->post('/refresh-token', 'UserController@refreshToken');
+
+    });
+
     $router->group(['middleware' => ['auth', 'token-expired']], function() use($router){
 
         $router->get('/clients', 'UserController@clients');

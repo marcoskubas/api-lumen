@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AuthService;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,16 @@ class UserController extends Controller
         return $request->user();
     }
 
+    public function refreshToken(){
+
+        $user = AuthService::refreshToken(Auth::user());
+
+        return response()->json([
+            'api_token' => $user->api_token,
+            'api_token_expiration' => $user->api_token_expiration
+        ], 200);
+    }
+
     /*
      * Login Stateless
      * */
@@ -40,11 +51,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 400);
         }
 
-        $expiration = new \Carbon\Carbon();
-        $expiration->addHour(2);
-        $user->api_token = sha1(str_random(32)) . '.' . sha1(str_random(32));
-        $user->api_token_expiration = $expiration->format('Y-m-d H:i:s');
-        $user->save();
+        $user = AuthService::refreshToken($user);
 
         return response()->json([
             'api_token' => $user->api_token,
@@ -54,9 +61,6 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
-
-        //dd($request->user());
-        //dd(Auth::user()); //Testes Recuperação Usuário Logado
 
         $this->validate($request, [
             'name'      => 'required|max:255',
