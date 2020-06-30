@@ -36,6 +36,15 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function verificationAccount(Request $request, $token){
+        $user = User::where('verification_token', $token)->firstOrFail();
+        $user->verified = true;
+        $user->verification_token = null;
+        $user->save();
+        $redirect = $request->get('redirect');
+        return redirect()->to($redirect);
+    }
+
     /*
      * Login Stateless
      * */
@@ -67,13 +76,16 @@ class UserController extends Controller
         $this->validate($request, [
             'name'      => 'required|max:255',
             'email'     => 'required|email|max:255|unique:users',
-            'password'  => 'required|min:6|max:16|confirmed'
+            'password'  => 'required|min:6|max:16|confirmed',
+            'redirect'  => 'required|url'
         ]);
 
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
+        $data['verification_token'] = md5(str_random(16));
         $user = User::create($data);
-        Notification::send($user, new AccountCreated($user));
+        $redirect = url('/api/verification-account/' . $user->verification_token . '?redirect=' . $request->input('redirect'));
+        Notification::send($user, new AccountCreated($user, $redirect));
         return response()->json($user, 201);
     }
 

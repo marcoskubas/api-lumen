@@ -9,10 +9,12 @@ use Illuminate\Notifications\Notification;
 class AccountCreated extends Notification{
 
     private $user;
+    private $redirect;
 
-    public function __construct(User $user)
+    public function __construct(User $user, $redirect)
     {
         $this->user = $user;
+        $this->redirect = $redirect;
     }
 
     public function via($notifiable){
@@ -24,7 +26,7 @@ class AccountCreated extends Notification{
             ->subject('Sua conta foi criada')
             ->greeting("Olá {$this->user->name}, ")
             ->line("Sua conta foi criada")
-            ->action("Acesse este endereço para validá-la", url('/'))
+            ->action("Acesse este endereço para validá-la", $this->redirect)
             ->line('Obrigado por usar nossa aplicação')
             ->salutation('Atenciosamente,');
     }
