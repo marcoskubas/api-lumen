@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\AccountCreated;
 use App\Services\AuthService;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
@@ -70,8 +72,9 @@ class UserController extends Controller
 
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
-        $model = User::create($data);
-        return response()->json($model, 201);
+        $user = User::create($data);
+        Notification::send($user, new AccountCreated($user));
+        return response()->json($user, 201);
     }
 
     public function clients(Request $request){

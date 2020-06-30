@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Mail\MailServiceProvider;
+use Illuminate\Notifications\NotificationServiceProvider;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -24,7 +27,8 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades(true, [
-    Hash::class => 'Hash'
+    Hash::class => 'Hash',
+    Notification::class => 'Notification'
 ]);
 
 $app->withEloquent();
@@ -84,9 +88,11 @@ $app->singleton(
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(MailServiceProvider::class);
+$app->register(NotificationServiceProvider::class);
 
 if ($app->environment() !== 'production') {
-    $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 }
 
 /*
