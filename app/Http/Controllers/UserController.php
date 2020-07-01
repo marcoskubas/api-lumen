@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
 use App\Notifications\AccountCreated;
 use App\Services\AuthService;
 use App\User;
@@ -90,6 +91,7 @@ class UserController extends Controller
     }
 
     public function clients(Request $request){
-        return response()->json(['ok' => true]);
+        $clients = Client::paginate(20);
+        return response()->json($clients);
     }
 }

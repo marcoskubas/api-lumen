@@ -71,7 +71,8 @@ $app->singleton(
 
  $app->routeMiddleware([
      'auth'             => App\Http\Middleware\Authenticate::class,
-     'token-expired'    => App\Http\Middleware\TokenExpirationMiddleware::class
+     'token-expired'    => App\Http\Middleware\TokenExpirationMiddleware::class,
+     'is-verified'      => App\Http\Middleware\IsVerifiedMiddleware::class
  ]);
 
 /*

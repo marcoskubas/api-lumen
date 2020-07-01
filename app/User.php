@@ -36,6 +36,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password', 'api_token', 'api_token_expiration', 'verification_token'
+        'password', 'api_token', 'api_token_expiration', 'verification_token', 'verified'
     ];
 }

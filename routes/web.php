@@ -31,7 +31,7 @@ $router->group(['prefix' => 'api'], function() use($router){
 
     });
 
-    $router->group(['middleware' => ['auth', 'token-expired']], function() use($router){
+    $router->group(['middleware' => ['auth', 'is-verified', 'token-expired']], function() use($router){
 
         $router->get('/clients', 'UserController@clients');
         $router->get('/user-auth', 'UserController@userAuth');
